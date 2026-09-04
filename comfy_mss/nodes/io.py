@@ -2,8 +2,8 @@ import os
 
 import folder_paths
 
-from ..constants import AUDIO_EXTENSIONS, CATEGORY
-from ..utils.audio import audio_name_from_path, load_audio_paths, save_comfy_audio, scan_audio_folder
+from ..constants import CATEGORY
+from ..utils.audio import audio_name_from_path, save_comfy_audio
 
 
 class PymssLoadAudio:
@@ -38,40 +38,6 @@ class PymssLoadAudio:
         waveform, sample_rate = load(audio_path)
         comfy_audio = {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
         return (comfy_audio, audio_name_from_path(audio_path))
-
-
-class PymssLoadAudioBatch:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "folder": ("STRING", {"default": "", "multiline": False}),
-                "recursive": ("BOOLEAN", {"default": False}),
-                "sort_files": ("BOOLEAN", {"default": True}),
-            },
-            "optional": {
-                # Same runtime-input metadata as PymssLoadAudio; hosts that feed
-                # a file list at run time (pymss-studio) key it by this name.
-                "input_name": ("STRING", {"default": "", "multiline": False}),
-            },
-        }
-
-    RETURN_TYPES = ("AUDIO", "STRING")
-    RETURN_NAMES = ("audio", "audio_name")
-    OUTPUT_IS_LIST = (True, True)
-    FUNCTION = "load"
-    CATEGORY = CATEGORY
-
-    def load(self, folder, recursive, sort_files, input_name=""):
-        paths = scan_audio_folder(folder, recursive, AUDIO_EXTENSIONS)
-        audios, audio_names = load_audio_paths(
-            paths=paths,
-            sample_rate=0,
-            mono=False,
-            sort_files=bool(sort_files),
-            limit=0,
-        )
-        return (audios, audio_names)
 
 
 class PymssSaveAudio:

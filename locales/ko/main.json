@@ -1,4 +1,5 @@
 {
+  "comfyMss": {"refreshModels": "모델 새로고침", "uploadAudio": "오디오 업로드"},
   "nodeDefs": {
     "pymss_mss_separate": {
       "title": "MSS 분리",
@@ -84,18 +85,6 @@
       "title": "오디오 로드",
       "widgets": {
         "audio": "오디오"
-      },
-      "outputs": {
-        "audio": "오디오",
-        "audio_name": "오디오 이름"
-      }
-    },
-    "pymss_load_audio_batch": {
-      "title": "오디오 일괄 로드",
-      "widgets": {
-        "folder": "폴더",
-        "recursive": "재귀 검색",
-        "sort_files": "파일 정렬"
       },
       "outputs": {
         "audio": "오디오",

@@ -20,7 +20,6 @@ import { registerSaveAudioNode } from "./comfy_mss/save_audio.js";
 import { registerSeparateNode } from "./comfy_mss/separate.js";
 import { registerFixedWidthNode, registerFixedWidthOnlyNode } from "./comfy_mss/sizing.js";
 import {
-  currentLanguage,
   loadTranslations,
   onTranslationsLoaded,
   t,
@@ -44,30 +43,13 @@ const COMFY_MSS_NODE_TYPES = new Set([
   SAVE_AUDIO_NODE_TYPE,
 ]);
 
-function refreshNodeLanguage(node, nodeName) {
-  const language = currentLanguage();
-  if (node.comfyMssLanguage === language) {
-    translateNodeLabels(node, nodeName);
-    return;
-  }
-  node.comfyMssLanguage = language;
-  for (const widget of node.widgets ?? []) {
-    if (widget.comfyMssI18nKey) {
-      const label = t(widget.comfyMssI18nKey);
-      widget.label = label;
-      widget.localized_name = label;
-    }
-  }
-  translateNodeLabels(node, nodeName);
-}
-
 function refreshGraphLanguage() {
   for (const node of app.graph?._nodes ?? []) {
     const nodeName = node?.comfyClass ?? node?.type;
     if (!COMFY_MSS_NODE_TYPES.has(nodeName)) {
       continue;
     }
-    refreshNodeLanguage(node, nodeName);
+    translateNodeLabels(node, nodeName);
   }
   app.graph?.setDirtyCanvas?.(true, true);
 }
@@ -84,14 +66,13 @@ app.registerExtension({
   async beforeRegisterNodeDef(nodeType, nodeData) {
     applyColorSetup();
     loadTranslations(api);
-
     function wrapOnNodeCreated(extra) {
       const previousOnNodeCreated = nodeType.prototype.onNodeCreated;
       nodeType.prototype.onNodeCreated = function () {
         const result = previousOnNodeCreated?.apply(this, arguments);
         colorNodeSlots(this);
         extra?.call(this);
-        refreshNodeLanguage(this, nodeData.name);
+        translateNodeLabels(this, nodeData.name);
         return result;
       };
     }
@@ -113,13 +94,13 @@ app.registerExtension({
 
     const originalOnDrawForeground = nodeType.prototype.onDrawForeground;
     nodeType.prototype.onDrawForeground = function (...args) {
-      refreshNodeLanguage(this, nodeData.name);
+      translateNodeLabels(this, nodeData.name);
       return withTranslatedWidgetNames(this, () => originalOnDrawForeground?.apply(this, args));
     };
 
     const originalOnDrawBackground = nodeType.prototype.onDrawBackground;
     nodeType.prototype.onDrawBackground = function (...args) {
-      refreshNodeLanguage(this, nodeData.name);
+      translateNodeLabels(this, nodeData.name);
       return withTranslatedWidgetNames(this, () => originalOnDrawBackground?.apply(this, args));
     };
 

@@ -1,4 +1,5 @@
 {
+  "comfyMss": {"refreshModels": "モデルを更新", "uploadAudio": "音声をアップロード"},
   "nodeDefs": {
     "pymss_mss_separate": {
       "title": "MSS 分離",
@@ -84,18 +85,6 @@
       "title": "音声を読み込み",
       "widgets": {
         "audio": "音声"
-      },
-      "outputs": {
-        "audio": "音声",
-        "audio_name": "音声名"
-      }
-    },
-    "pymss_load_audio_batch": {
-      "title": "音声を一括読み込み",
-      "widgets": {
-        "folder": "フォルダ",
-        "recursive": "再帰的に読み込み",
-        "sort_files": "ファイルを並べ替え"
       },
       "outputs": {
         "audio": "音声",

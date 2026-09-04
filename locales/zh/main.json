@@ -1,4 +1,5 @@
 {
+  "comfyMss": {"refreshModels": "刷新模型", "uploadAudio": "上传音频"},
   "nodeDefs": {
     "pymss_mss_separate": {
       "title": "MSS 分离",
@@ -84,18 +85,6 @@
       "title": "加载音频",
       "widgets": {
         "audio": "音频"
-      },
-      "outputs": {
-        "audio": "音频",
-        "audio_name": "音频名称"
-      }
-    },
-    "pymss_load_audio_batch": {
-      "title": "批量加载音频",
-      "widgets": {
-        "folder": "文件夹",
-        "recursive": "递归",
-        "sort_files": "排序文件"
       },
       "outputs": {
         "audio": "音频",

@@ -6,7 +6,6 @@ import folder_paths
 import numpy as np
 import torch
 
-from ..constants import AUDIO_EXTENSIONS
 from pymss.audio_io import load_audio, save_audio
 
 
@@ -66,86 +65,6 @@ def attach_audio_metadata(audio, source_path=None, stem_name=None):
 
 def audio_name_from_path(path):
     return safe_filename_part(os.path.splitext(os.path.basename(str(path or "")))[0], "")
-
-
-def resolve_input_path(path):
-    path = str(path or "").strip().strip('"')
-    if not path:
-        return None
-    path = os.path.expanduser(os.path.expandvars(path))
-    if os.path.isabs(path):
-        return os.path.abspath(path)
-    return os.path.abspath(os.path.join(folder_paths.get_input_directory(), path))
-
-
-def parse_audio_file_list(audio_files):
-    paths = []
-    for line in str(audio_files or "").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        resolved = resolve_input_path(line)
-        if resolved is not None:
-            paths.append(resolved)
-    return paths
-
-
-def parse_extensions(extensions):
-    parsed = []
-    for item in re.split(r"[,;\s]+", str(extensions or "")):
-        item = item.strip().lower()
-        if not item:
-            continue
-        parsed.append(item if item.startswith(".") else f".{item}")
-    return tuple(parsed or AUDIO_EXTENSIONS)
-
-
-def scan_audio_folder(folder, recursive, extensions):
-    folder = resolve_input_path(folder)
-    if folder is None:
-        raise ValueError("folder is required when input_mode is folder.")
-    if not os.path.isdir(folder):
-        raise NotADirectoryError(f"folder does not exist: {folder}")
-
-    matches = []
-    extensions = tuple(ext.lower() for ext in extensions)
-    if recursive:
-        for root, _dirs, files in os.walk(folder):
-            for filename in files:
-                if filename.lower().endswith(extensions):
-                    matches.append(os.path.join(root, filename))
-    else:
-        for filename in os.listdir(folder):
-            path = os.path.join(folder, filename)
-            if os.path.isfile(path) and filename.lower().endswith(extensions):
-                matches.append(path)
-    return matches
-
-
-def load_audio_paths(paths, sample_rate, mono, sort_files, limit):
-    unique_paths = []
-    seen = set()
-    for path in paths:
-        path = os.path.abspath(path)
-        if path in seen:
-            continue
-        seen.add(path)
-        unique_paths.append(path)
-
-    if sort_files:
-        unique_paths.sort(key=lambda item: item.lower())
-    if limit > 0:
-        unique_paths = unique_paths[:limit]
-    if not unique_paths:
-        raise ValueError("No audio files were found.")
-
-    audios = []
-    for path in unique_paths:
-        if not os.path.isfile(path):
-            raise FileNotFoundError(f"audio file does not exist: {path}")
-        audio, sr = load_audio(path, sr=None if sample_rate <= 0 else sample_rate, mono=mono)
-        audios.append(attach_audio_metadata(numpy_to_comfy_audio(audio, sr), source_path=path))
-    return audios, [audio_name_from_path(path) for path in unique_paths]
 
 
 def resolve_save_dir():

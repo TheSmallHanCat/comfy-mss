@@ -111,7 +111,6 @@ function styleOpenModelMenus() {
     const text = String(item.textContent ?? "").trim();
     if (notDownloadedDisplayNames.has(text)) {
       item.style.color = NOT_DOWNLOADED_COLOR;
-      item.title = t("notDownloaded");
     }
   }
 }
@@ -247,7 +246,7 @@ function addRefreshModelsButton(node, api) {
     return;
   }
   node.comfyMssRefreshModelsButtonAdded = true;
-  const button = node.addWidget("button", t("refreshModels"), null, async () => {
+  const button = node.addWidget("button", t("refreshModels", "Refresh Models"), null, async () => {
     await refreshModelWidgetOptions(node, api);
     scheduleRefreshNodeOutputs(node, api);
   });
@@ -264,7 +263,7 @@ function syncLanguage(node, api) {
   rebuildNotDownloadedDisplayNames();
   for (const widget of node.widgets ?? []) {
     if (widget.comfyMssI18nKey) {
-      const label = t(widget.comfyMssI18nKey);
+      const label = t(widget.comfyMssI18nKey, widget.label);
       widget.label = label;
       widget.localized_name = label;
     }

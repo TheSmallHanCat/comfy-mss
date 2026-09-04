@@ -1,33 +1,12 @@
 import os
-import folder_paths
 
 from aiohttp import web
+import folder_paths
 from server import PromptServer
-from ..constants import AUDIO_EXTENSIONS
 from ..constants import MODEL_DIR_ENV_VARS
+from ..constants import AUDIO_EXTENSIONS
 from ..paths import registered_model_dirs
 from .catalog import custom_model_catalog, model_catalog
-
-
-def _safe_upload_filename(filename):
-    filename = os.path.basename(str(filename or "").replace("\\", "/"))
-    filename = filename.strip().strip(".")
-    if not filename:
-        return None
-    if not filename.lower().endswith(AUDIO_EXTENSIONS):
-        return None
-    return filename
-
-
-def _available_upload_path(upload_dir, filename):
-    stem, ext = os.path.splitext(filename)
-    path = os.path.join(upload_dir, filename)
-    index = 1
-    while os.path.exists(path):
-        candidate = f"{stem} ({index}){ext}"
-        path = os.path.join(upload_dir, candidate)
-        index += 1
-    return path
 
 
 def register_routes():
@@ -50,19 +29,32 @@ def register_routes():
 
     @PromptServer.instance.routes.post("/comfy-mss/upload-audio")
     async def upload_comfy_mss_audio(request):
+        # This endpoint writes to the server filesystem.  Match the PR
+        # requirement by allowing only requests originating on the server.
+        peer = request.remote
+        if peer not in {None, "127.0.0.1", "::1", "localhost", "::ffff:127.0.0.1"}:
+            return web.Response(status=403, text="audio upload is local-only")
+
         post = await request.post()
         upload = post.get("audio")
         if not upload or not upload.file:
             return web.Response(status=400, text="audio file is required")
 
-        filename = _safe_upload_filename(upload.filename)
-        if filename is None:
+        filename = os.path.basename(str(upload.filename or "").replace("\\", "/")).strip().strip(".")
+        if not filename or not filename.lower().endswith(AUDIO_EXTENSIONS):
             return web.Response(status=400, text="unsupported audio file")
 
-        upload_dir = folder_paths.get_input_directory()
+        upload_dir = os.path.realpath(folder_paths.get_input_directory())
         os.makedirs(upload_dir, exist_ok=True)
-        path = _available_upload_path(upload_dir, filename)
+        stem, ext = os.path.splitext(filename)
+        path = os.path.realpath(os.path.join(upload_dir, filename))
+        if os.path.commonpath((upload_dir, path)) != upload_dir:
+            return web.Response(status=400, text="invalid audio filename")
+        index = 1
+        while os.path.exists(path):
+            path = os.path.realpath(os.path.join(upload_dir, f"{stem} ({index}){ext}"))
+            index += 1
+
         with open(path, "wb") as handle:
             handle.write(upload.file.read())
-
         return web.json_response({"name": os.path.basename(path)})

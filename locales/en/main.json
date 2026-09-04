@@ -1,4 +1,5 @@
 {
+  "comfyMss": {"refreshModels": "Refresh Models", "uploadAudio": "Upload Audio"},
   "nodeDefs": {
     "pymss_mss_separate": {
       "title": "MSS Separate",
@@ -84,18 +85,6 @@
       "title": "Load Audio",
       "widgets": {
         "audio": "audio"
-      },
-      "outputs": {
-        "audio": "audio",
-        "audio_name": "audio_name"
-      }
-    },
-    "pymss_load_audio_batch": {
-      "title": "Load Audio Batch",
-      "widgets": {
-        "folder": "folder",
-        "recursive": "recursive",
-        "sort_files": "sort_files"
       },
       "outputs": {
         "audio": "audio",

@@ -1,4 +1,5 @@
 {
+  "comfyMss": {"refreshModels": "重新整理模型", "uploadAudio": "上傳音訊"},
   "nodeDefs": {
     "pymss_mss_separate": {
       "title": "MSS 分離",
@@ -84,18 +85,6 @@
       "title": "載入音訊",
       "widgets": {
         "audio": "音訊"
-      },
-      "outputs": {
-        "audio": "音訊",
-        "audio_name": "音訊名稱"
-      }
-    },
-    "pymss_load_audio_batch": {
-      "title": "批次載入音訊",
-      "widgets": {
-        "folder": "資料夾",
-        "recursive": "遞迴",
-        "sort_files": "排序檔案"
       },
       "outputs": {
         "audio": "音訊",

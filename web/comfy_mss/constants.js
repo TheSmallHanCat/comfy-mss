@@ -11,7 +11,6 @@ export const FIXED_200_NODE_TYPES = new Set(["pymss_audio_invert_phase", "pymss_
 export const FIXED_260_NODE_TYPES = new Set([
   "pymss_vr_params",
   "pymss_mss_params",
-  "pymss_load_audio_batch",
 ]);
 export const FIXED_420_NODE_TYPES = new Set([
   "pymss_mss_separate",

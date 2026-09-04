@@ -1,6 +1,6 @@
 [project]
 name = "comfy-mss"
-version = "1.0.4"
+version = "1.1.1"
 description = "ComfyUI custom nodes for pymss music source separation."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -9,7 +9,7 @@ authors = [
   { name = "Sucial" },
 ]
 dependencies = [
-  "pymss>=2.0.18",
+  "pymss>=2.1.3",
 ]
 
 [project.urls]
