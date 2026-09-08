@@ -16,7 +16,6 @@
 - `MSS Params`: optional parameter input for `MSS Separate` and `Custom MSS Separate`.
 - `VR Params`: optional parameter input for `VR Separate`.
 - `Load Audio`: loads one audio file and outputs both the audio stream and the file name without extension.
-- `Load Audio Batch`: loads audio files from a folder as ComfyUI list outputs.
 - `Audio Invert Phase`: inverts audio input `a` and outputs `-a`.
 - `Audio Normalize`: normalizes only when the peak is above 0 dBFS.
 - `Audio Ensemble`: combines 2 to 10 audio inputs with selectable ensemble algorithms and weights.
@@ -151,23 +150,6 @@ Click `Refresh Models` after adding, removing, or changing custom model files. I
 ### Load Audio
 
 `Load Audio` is based on ComfyUI's built-in audio loader, but it also outputs `audio_name`, the selected file name without extension. The frontend adds the same upload button behavior as the official loader.
-
-### Load Audio Batch
-
-`Load Audio Batch` inputs:
-
-- `folder`: folder path.
-- `recursive`: scan subfolders when enabled.
-- `sort_files`: sort matched files by path when enabled.
-
-Relative folder paths are resolved from ComfyUI's input folder. Absolute paths are used directly.
-
-`Load Audio Batch` outputs:
-
-- `audio`: list of ComfyUI `AUDIO` objects.
-- `audio_name`: list of loaded file names without extension.
-
-Normal downstream ComfyUI nodes execute once per loaded list item, which is useful for batch separation workflows.
 
 ### Audio Invert Phase and Normalize
 
