@@ -113,6 +113,7 @@ class CustomModelTests(unittest.TestCase):
             choices, options = inputs["model_type"]
             self.assertEqual(options["default"], "auto")
             self.assertEqual(choices[1:], ["mel_band_roformer", "bs_roformer", "bs_roformer_hyperace",
+                                           "bs_conformer", "mel_band_conformer",
                                            "mdx23c", "htdemucs", "apollo", "bandit", "bandit_v2", "scnet"])
 
     def test_unknown_auto_architecture_propagates_upstream_runtime_error(self):

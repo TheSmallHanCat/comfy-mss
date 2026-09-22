@@ -309,6 +309,8 @@ class _CustomSeparateBase(_SeparateOutputBase):
         "mel_band_roformer",
         "bs_roformer",
         "bs_roformer_hyperace",
+        "bs_conformer",
+        "mel_band_conformer",
         "mdx23c",
         "htdemucs",
         "apollo",
