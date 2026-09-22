@@ -125,29 +125,7 @@ Click `Refresh Models` after adding, removing, or changing custom model files. I
 
 `Custom MSS Separate List` uses the same inputs and model menu behavior as `Custom MSS Separate`, but returns `audios` and `stem_names` as list outputs.
 
-Existing workflows keep their saved `model_type`; explicit selections take precedence
-over automatic detection. Models without identifying YAML fields still require a
-manual architecture selection.
-
-#### BS PolarFormer
-
-Place the PyTorch checkpoint and its matching YAML in one custom model folder:
-
-```text
-models/pymss/custom/BS-PF-SV/
-  model.ckpt
-  model.yaml
-```
-
-Select that folder in `Custom MSS Separate` or `Custom MSS Separate List`, and use
-`model_type=auto` or `bs_roformer`. Keep `model.use_pope: true` in the original YAML;
-the positional encoding is implemented by pymss-core. No separate PoPE or Triton
-installation is required. Stem outputs follow `training.instruments`, including
-names such as `lead` and `back_instrum`.
-
-Leave `overlap_size` and `chunk_size` at `Default` to use the YAML configuration.
-YAML `inference.num_overlap` is handled by pymss; an explicit `overlap_size` takes
-precedence. PoPE models requested on MLX use pymss's PyTorch fallback.
+Existing workflows keep their saved `model_type`; explicit selections take precedence over automatic detection. Models without identifying YAML fields still require a manual architecture selection.
 
 ## Params Nodes
 
