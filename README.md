@@ -28,6 +28,12 @@
 
 Clone or download this repository, put it into your ComfyUI `custom_nodes` folder. The custom nodes load automatically when you start ComfyUI. Make sure to install `pymss` in the same Python environment as ComfyUI. Or you can use `comfyui_manager` to install this custom node.
 
+This revision requires `pymss>=2.1.6` for BS PolarFormer support (`pymss-core` 0.1.9).
+Until those releases are published, development requires the matching local pymss
+and pymss-core checkouts; the new requirement cannot yet be installed from PyPI.
+From this repository, install the two sibling checkouts with ComfyUI's Python:
+`python -m pip install -e ../pymss-core -e ../pymss`.
+
 ```bash
 ComfyUI/custom_nodes
         └──comfy-mss
@@ -109,7 +115,7 @@ training:
 
 - `audio`: ComfyUI `AUDIO`.
 - `model_name`: detected custom model pair.
-- `model_type`: pymss architecture type, such as `mel_band_roformer`, `bs_roformer`, `mdx23c`, or `htdemucs`. VR/UVR is not supported.
+- `model_type`: defaults to `auto`, which is passed to pymss for architecture detection. Detection rules are maintained in pymss-core. Unknown or ambiguous configurations raise `ModelTypeDetectionError` (a `RuntimeError` subclass) through ComfyUI's normal execution error handling; select the architecture explicitly to continue. VR/UVR is not supported.
 - `device`: `auto`, `cpu`, `cuda`, `mps`, or `mlx`.
 - `params`: optional `MSS Params` output.
 - `device_ids`: defaults to `0`.
@@ -118,6 +124,8 @@ training:
 Click `Refresh Models` after adding, removing, or changing custom model files. If no valid custom model pair exists, the node hides unused stem outputs.
 
 `Custom MSS Separate List` uses the same inputs and model menu behavior as `Custom MSS Separate`, but returns `audios` and `stem_names` as list outputs.
+
+Existing workflows keep their saved `model_type`; explicit selections take precedence over automatic detection. Models without identifying YAML fields still require a manual architecture selection.
 
 ## Params Nodes
 

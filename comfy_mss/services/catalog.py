@@ -104,22 +104,10 @@ def custom_entry_stems(config):
 
 
 def custom_entry_model_type(config):
-    for path in (
-        ("model_type",),
-        ("model", "type"),
-        ("model", "model_type"),
-        ("model", "architecture"),
-        ("training", "model_type"),
-    ):
-        value = config
-        for key in path:
-            if not isinstance(value, dict) or key not in value:
-                value = None
-                break
-            value = value[key]
-        if value:
-            return str(value)
-    return "mel_band_roformer"
+    try:
+        return pymss.detect_model_type(config)
+    except pymss.ModelTypeDetectionError:
+        return None
 
 
 def custom_model_catalog():
@@ -169,11 +157,13 @@ def custom_model_catalog():
                 config = _load_yaml(config_file.path)
             except Exception:
                 continue
+            if not isinstance(config, dict):
+                continue
             model_type = custom_entry_model_type(config)
             # Custom MSS nodes only instantiate MSST architectures. VR/UVR
             # models belong to the dedicated VR nodes and must not appear in
             # this custom-model menu even when accompanied by a YAML file.
-            if model_type.strip().lower() == "vr":
+            if model_type and model_type.strip().lower() == "vr":
                 continue
             seen.add(key)
             rows.append(
