@@ -305,6 +305,7 @@ class _CustomSeparateBase(_SeparateOutputBase):
     MODEL_KIND = "custom"
     PARAM_TYPE = MSS_PARAMS_TYPE
     MODEL_TYPES = [
+        "auto",
         "mel_band_roformer",
         "bs_roformer",
         "bs_roformer_hyperace",
@@ -322,7 +323,7 @@ class _CustomSeparateBase(_SeparateOutputBase):
             "required": {
                 "audio": ("AUDIO",),
                 "model_name": (custom_model_names(),),
-                "model_type": (cls.MODEL_TYPES, {"default": "mel_band_roformer"}),
+                "model_type": (cls.MODEL_TYPES, {"default": "auto"}),
                 "device": (["auto", "cpu", "cuda", "mps", "mlx"], {"default": "auto"}),
             },
             "optional": {
